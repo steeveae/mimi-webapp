@@ -26,21 +26,26 @@ export default function Bot() {
   }
 
   return (
-    <main style={{ padding: 40 }}>
+    <main style={{ padding: 40, maxWidth: 800, margin: "0 auto" }}>
       <h1>Assistant vins 🤖🍷</h1>
-      <input
-        type="text"
-        value={question}
-        onChange={(e) => setQuestion(e.target.value)}
-        placeholder="Ex: vin rouge pas cher"
-        style={{ padding: 10, width: "70%" }}
-      />
-      <button onClick={handleAsk} disabled={loading} style={{ marginLeft: 10, padding: 10 }}>
-        {loading ? "Analyse..." : "Demander"}
-      </button>
-      <div style={{ marginTop: 20 }}>
+      <p>Posez une question (ex: “vin rouge à moins de 5000”, “2 cartons de Château Mimi Rouge”).</p>
+
+      <div style={{ display: "flex", gap: 10 }}>
+        <input
+          type="text"
+          value={question}
+          onChange={(e) => setQuestion(e.target.value)}
+          placeholder="Votre question..."
+          style={{ flex: 1, padding: 10 }}
+        />
+        <button onClick={handleAsk} disabled={loading} style={{ padding: "10px 16px" }}>
+          {loading ? "Analyse..." : "Demander"}
+        </button>
+      </div>
+
+      <div style={{ marginTop: 20, whiteSpace: "pre-line" }}>
         <strong>Réponse :</strong>
-        <p>{answer}</p>
+        <p style={{ marginTop: 8 }}>{answer}</p>
       </div>
     </main>
   )
