@@ -97,7 +97,7 @@ export async function POST(req) {
       let prixUnitaire = unit.includes("bouteille") ? vinChoisi.prixB : vinChoisi.prixC
       let total = prixUnitaire ? prixUnitaire * qty : null
       return NextResponse.json({
-        answer: `Commande simulée: ${qty} ${unit} de ${vinChoisi.nom}.\nPrix unitaire: ${fmtFCFA(prixUnitaire)}\nTotal: ${fmtFCFA(total)}`
+       answer: `Commande simulée: ${qty} ${unit} de ${vinChoisi.nom}.\nPrix unitaire: ${fmtFCFA(prixUnitaire)}\nTotal: ${fmtFCFA(total)}\n\nVoulez-vous confirmer cette commande ?`
       })
     }
   }
