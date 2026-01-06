@@ -86,4 +86,25 @@ export default function Bot() {
           <h3>Informations client 📝</h3>
           <input placeholder="Nom client" value={client} onChange={e => setClient(e.target.value)} style={{ display:"block", margin:"5px 0", padding:8 }} />
           <input placeholder="Téléphone" value={telephone} onChange={e => setTelephone(e.target.value)} style={{ display:"block", margin:"5px 0", padding:8 }} />
-          <input placeholder="Zone" value={zone} onChange={e =>
+          <input placeholder="Zone" value={zone} onChange={e => setZone(e.target.value)} style={{ display:"block", margin:"5px 0", padding:8 }} />
+          <select value={reception} onChange={e => setReception(e.target.value)} style={{ display:"block", margin:"5px 0", padding:8 }}>
+            <option>Boutique</option>
+            <option>Livraison</option>
+          </select>
+          <select value={paiement} onChange={e => setPaiement(e.target.value)} style={{ display:"block", margin:"5px 0", padding:8 }}>
+            <option>Non payé</option>
+            <option>Mobile Money</option>
+            <option>Espèces</option>
+          </select>
+
+          <button
+            onClick={confirmOrder}
+            style={{ marginTop: 10, padding: "10px 16px", background: "#4caf50", color: "white" }}
+          >
+            Confirmer la commande ✅
+          </button>
+        </div>
+      )}
+    </main>
+  )
+}
