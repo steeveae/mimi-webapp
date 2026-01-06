@@ -23,6 +23,7 @@ export async function POST(req) {
   const dateStr = date.toLocaleDateString("fr-FR")
   const heureStr = date.toLocaleTimeString("fr-FR")
 
+  // Ligne complète pour COMMANDES
   const newRow = [
     idCommande || `CMD-${Date.now()}`,
     client || "Client Démo",
