@@ -15,26 +15,13 @@ export default async function Catalogue() {
       <table border="1" cellPadding="10">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Nom du vin</th>
-            <th>Catégorie</th>
-            <th>Gamme</th>
-            <th>Prix bouteille</th>
-            <th>Prix carton</th>
-            <th>Stock bouteilles</th>
-            <th>Stock cartons</th>
-            <th>Description</th>
-            <th>Prix promo bouteille</th>
-            <th>Prix promo carton</th>
-            <th>Équivalence prix</th>
+            {rows[0].map((col, i) => <th key={i}>{col}</th>)}
           </tr>
         </thead>
         <tbody>
           {rows.slice(1).map((row, i) => (
             <tr key={i}>
-              {row.map((cell, j) => (
-                <td key={j}>{cell}</td>
-              ))}
+              {row.map((cell, j) => <td key={j}>{cell}</td>)}
             </tr>
           ))}
         </tbody>
