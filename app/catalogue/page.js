@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic"
+
 async function getData() {
   const res = await fetch(
     `https://sheets.googleapis.com/v4/spreadsheets/${process.env.GOOGLE_SHEETS_ID}/values/STOCK?key=${process.env.GOOGLE_SHEETS_API_KEY}`
