@@ -1,10 +1,9 @@
-// 👇 Force Next.js à rendre la page dynamiquement
 export const dynamic = "force-dynamic";
 
 async function getData() {
   const res = await fetch(
     `https://sheets.googleapis.com/v4/spreadsheets/${process.env.GOOGLE_SHEETS_ID}/values/STOCK?key=${process.env.GOOGLE_SHEETS_API_KEY}`,
-    { cache: "no-store" } // 👈 évite le cache statique
+    { cache: "no-store" }
   )
   const data = await res.json()
   return data.values
@@ -13,7 +12,6 @@ async function getData() {
 export default async function Catalogue() {
   const rows = await getData()
 
-  // Si aucune donnée n'est trouvée
   if (!rows || rows.length === 0) {
     return <p>Le catalogue est vide pour l’instant.</p>
   }
@@ -23,15 +21,11 @@ export default async function Catalogue() {
       <h1>Catalogue des vins 🍇</h1>
       <table border="1" cellPadding="10">
         <thead>
-          <tr>
-            {rows[0].map((col, i) => <th key={i}>{col}</th>)}
-          </tr>
+          <tr>{rows[0].map((col, i) => <th key={i}>{col}</th>)}</tr>
         </thead>
         <tbody>
           {rows.slice(1).map((row, i) => (
-            <tr key={i}>
-              {row.map((cell, j) => <td key={j}>{cell}</td>)}
-            </tr>
+            <tr key={i}>{row.map((cell, j) => <td key={j}>{cell}</td>)}</tr>
           ))}
         </tbody>
       </table>
