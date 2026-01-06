@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 
 export const dynamic = "force-dynamic"
 
+// Parser adapté à tes colonnes STOCK
 function parseRows(rows) {
   const [header, ...data] = rows || []
   return data.map((r) => ({
@@ -20,6 +21,7 @@ function parseRows(rows) {
   }))
 }
 
+// Données fictives si STOCK est vide
 const fakeData = [
   { id: "1", nom: "Vin Rouge Démo", categorie: "Rouge", gamme: "Classique", prixB: 5000, prixC: 28000, stockB: 20, stockC: 5, desc: "Rouge fruité de démonstration" },
   { id: "2", nom: "Vin Blanc Démo", categorie: "Blanc", gamme: "Premium", prixB: 7000, prixC: 40000, stockB: 15, stockC: 3, desc: "Blanc sec de démonstration" }
@@ -48,6 +50,14 @@ export async function POST(req) {
   }
   if (!vins.length) vins = fakeData
 
+  // Recherche par nom
+  const byName = vins.find(v => v.nom.toLowerCase().includes(q))
+  if (byName) {
+    return NextResponse.json({
+      answer: `${byName.nom} — ${byName.categorie}, ${byName.gamme}\nPrix: ${fmtFCFA(byName.prixB)} la bouteille\nStock: ${byName.stockB} bouteilles`
+    })
+  }
+
   // Quantité
   const qtyMatch = q.match(/(\d+)\s*(bouteilles|cartons?)/)
   if (qtyMatch) {
@@ -58,21 +68,14 @@ export async function POST(req) {
     let total = prixUnitaire ? prixUnitaire * qty : null
 
     return NextResponse.json({
-      answer: `Commande simulée: ${qty} ${unit} de ${vinChoisi.nom}.\nPrix unitaire: ${fmtFCFA(prixUnitaire)}\nTotal: ${fmtFCFA(total)}\n\nVoulez-vous confirmer cette commande ?`,
+      answer: `Commande simulée: ${qty} ${unit} de ${vinChoisi.nom}.\nPrix unitaire: ${fmtFCFA(prixUnitaire)}\nTotal: ${fmtFCFA(total)}\n\nVeuillez remplir vos informations pour confirmer la commande.`,
       order: {
         idCommande: `CMD-${Date.now()}`,
-        client: "Client Démo",
-        telephone: "060000000",
         produit: vinChoisi.nom,
         mode: unit,
         quantite: qty,
         total: total,
-        reduction: "Aucune",
-        reception: "Boutique",
-        zone: "Libreville",
-        jour: new Date().toLocaleDateString("fr-FR"),
-        heure: new Date().toLocaleTimeString("fr-FR"),
-        paiement: "Non payé"
+        reduction: "Aucune"
       }
     })
   }
