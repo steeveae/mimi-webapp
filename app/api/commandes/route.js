@@ -3,10 +3,44 @@ import { NextResponse } from "next/server"
 export const dynamic = "force-dynamic"
 
 export async function POST(req) {
-  const { client, vin, quantite, total } = await req.json()
-  const date = new Date().toLocaleDateString("fr-FR")
+  const {
+    idCommande,
+    client,
+    telephone,
+    produit,
+    mode,
+    quantite,
+    total,
+    reduction,
+    reception,
+    zone,
+    jour,
+    heure,
+    paiement
+  } = await req.json()
 
-  const newRow = [client, vin, quantite, total, date]
+  const date = new Date()
+  const dateStr = date.toLocaleDateString("fr-FR")
+  const heureStr = date.toLocaleTimeString("fr-FR")
+
+  // Prépare la ligne complète
+  const newRow = [
+    idCommande || `CMD-${Date.now()}`, // ID auto si non fourni
+    client || "Client Démo",
+    telephone || "N/A",
+    produit || "Produit Démo",
+    mode || "Carton",
+    quantite || "1",
+    total || "0",
+    reduction || "Aucune",
+    reception || "Boutique",
+    zone || "Libreville",
+    jour || dateStr,
+    heure || heureStr,
+    paiement || "Non payé",
+    dateStr,
+    heureStr
+  ]
 
   try {
     const res = await fetch(
