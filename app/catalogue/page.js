@@ -1,8 +1,10 @@
-export const dynamic = "force-dynamic"
+// 👇 Force Next.js à rendre la page dynamiquement
+export const dynamic = "force-dynamic";
 
 async function getData() {
   const res = await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${process.env.GOOGLE_SHEETS_ID}/values/STOCK?key=${process.env.GOOGLE_SHEETS_API_KEY}`
+    `https://sheets.googleapis.com/v4/spreadsheets/${process.env.GOOGLE_SHEETS_ID}/values/STOCK?key=${process.env.GOOGLE_SHEETS_API_KEY}`,
+    { cache: "no-store" } // 👈 évite le cache statique
   )
   const data = await res.json()
   return data.values
@@ -10,6 +12,11 @@ async function getData() {
 
 export default async function Catalogue() {
   const rows = await getData()
+
+  // Si aucune donnée n'est trouvée
+  if (!rows || rows.length === 0) {
+    return <p>Le catalogue est vide pour l’instant.</p>
+  }
 
   return (
     <main style={{ padding: 40 }}>
