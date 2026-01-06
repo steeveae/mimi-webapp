@@ -1,6 +1,9 @@
+export const dynamic = "force-dynamic";
+
 async function getData() {
   const res = await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${process.env.GOOGLE_SHEETS_ID}/values/AVIS?key=${process.env.GOOGLE_SHEETS_API_KEY}`
+    `https://sheets.googleapis.com/v4/spreadsheets/${process.env.GOOGLE_SHEETS_ID}/values/AVIS?key=${process.env.GOOGLE_SHEETS_API_KEY}`,
+    { cache: "no-store" }
   )
   const data = await res.json()
   return data.values
@@ -9,9 +12,13 @@ async function getData() {
 export default async function Avis() {
   const rows = await getData()
 
+  if (!rows || rows.length === 0) {
+    return <p>Aucun avis client pour l’instant.</p>
+  }
+
   return (
     <main style={{ padding: 40 }}>
-      <h1>Avis clients ⭐</h1>
+      <h1>Avis des clients ⭐</h1>
       <table border="1" cellPadding="10">
         <thead>
           <tr>{rows[0].map((col, i) => <th key={i}>{col}</th>)}</tr>
