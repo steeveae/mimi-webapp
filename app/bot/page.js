@@ -5,11 +5,13 @@ export default function Bot() {
   const [question, setQuestion] = useState("")
   const [answer, setAnswer] = useState("")
   const [loading, setLoading] = useState(false)
+  const [pendingOrder, setPendingOrder] = useState(null)
 
   async function handleAsk() {
     if (!question.trim()) return
     setLoading(true)
     setAnswer("")
+    setPendingOrder(null)
     try {
       const res = await fetch("/api/bot", {
         method: "POST",
@@ -18,10 +20,27 @@ export default function Bot() {
       })
       const data = await res.json()
       setAnswer(data.answer || "Pas de réponse disponible.")
+      if (data.order) setPendingOrder(data.order)
     } catch {
       setAnswer("Erreur lors de la requête.")
     } finally {
       setLoading(false)
+    }
+  }
+
+  async function confirmOrder() {
+    if (!pendingOrder) return
+    try {
+      const res = await fetch("/api/commande", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(pendingOrder)
+      })
+      const data = await res.json()
+      alert(data.message)
+      setPendingOrder(null)
+    } catch {
+      alert("Erreur lors de l’enregistrement de la commande.")
     }
   }
 
@@ -47,6 +66,15 @@ export default function Bot() {
         <strong>Réponse :</strong>
         <p style={{ marginTop: 8 }}>{answer}</p>
       </div>
+
+      {pendingOrder && (
+        <button
+          onClick={confirmOrder}
+          style={{ marginTop: 10, padding: "10px 16px", background: "#4caf50", color: "white" }}
+        >
+          Confirmer la commande ✅
+        </button>
+      )}
     </main>
   )
 }
