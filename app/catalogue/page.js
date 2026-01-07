@@ -1,3 +1,5 @@
+import Link from "next/link"
+
 export const dynamic = "force-dynamic";
 
 async function getData() {
@@ -48,44 +50,31 @@ export default async function Catalogue() {
               />
             )}
 
-            {/* Nom du vin */}
             <h2 style={{ marginBottom: 10, color: "#6b1b1b" }}>{vin[1]}</h2>
-
-            {/* Catégorie et gamme */}
             <p><strong>Catégorie :</strong> {vin[2]}</p>
             <p><strong>Gamme :</strong> {vin[3]}</p>
-
-            {/* Prix bouteille et carton */}
             <p><strong>Prix bouteille :</strong> {vin[4]} FCFA</p>
             <p><strong>Prix carton :</strong> {vin[5]} FCFA</p>
 
-            {/* Promos */}
-            {vin[9] && (
-              <p style={{ color: "red", fontWeight: "bold" }}>
-                🎉 Promo bouteille : {vin[9]} FCFA
-              </p>
-            )}
-            {vin[10] && (
-              <p style={{ color: "red", fontWeight: "bold" }}>
-                🎉 Promo carton : {vin[10]} FCFA
-              </p>
-            )}
+            {vin[9] && <p style={{ color: "red", fontWeight: "bold" }}>🎉 Promo bouteille : {vin[9]} FCFA</p>}
+            {vin[10] && <p style={{ color: "red", fontWeight: "bold" }}>🎉 Promo carton : {vin[10]} FCFA</p>}
 
-            {/* Description */}
             <p style={{ fontStyle: "italic", marginTop: 10 }}>{vin[8]}</p>
 
-            {/* Bouton d'action */}
-            <button style={{ 
-              marginTop: 15, 
-              padding: "10px 16px", 
-              background: "#6b1b1b", 
-              color: "white", 
-              border: "none", 
-              borderRadius: 6, 
-              cursor: "pointer" 
-            }}>
-              Commander
-            </button>
+            {/* Lien vers la fiche produit */}
+            <Link href={`/catalogue/${vin[0]}`}>
+              <button style={{ 
+                marginTop: 15, 
+                padding: "10px 16px", 
+                background: "#6b1b1b", 
+                color: "white", 
+                border: "none", 
+                borderRadius: 6, 
+                cursor: "pointer" 
+              }}>
+                Voir détail
+              </button>
+            </Link>
           </div>
         ))}
       </div>
