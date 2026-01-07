@@ -15,7 +15,6 @@ export default async function Catalogue() {
     return <p>Le catalogue est vide pour l’instant.</p>
   }
 
-  const headers = rows[0]
   const vins = rows.slice(1)
 
   return (
@@ -28,7 +27,10 @@ export default async function Catalogue() {
             <p><strong>Catégorie :</strong> {vin[2]}</p>
             <p><strong>Gamme :</strong> {vin[3]}</p>
             <p><strong>Prix bouteille :</strong> {vin[4]} FCFA</p>
-            <p><strong>Stock :</strong> {vin[6]} bouteilles</p>
+            <p><strong>Prix carton :</strong> {vin[5]} FCFA</p>
+            {vin[9] && <p style={{ color: "red" }}><strong>Promo bouteille :</strong> {vin[9]} FCFA</p>}
+            {vin[10] && <p style={{ color: "red" }}><strong>Promo carton :</strong> {vin[10]} FCFA</p>}
+            <p style={{ fontStyle: "italic" }}>{vin[8]}</p>
           </div>
         ))}
       </div>
