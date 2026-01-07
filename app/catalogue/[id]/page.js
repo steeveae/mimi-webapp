@@ -1,3 +1,6 @@
+"use client"
+import { useState, useEffect } from "react"
+
 export const dynamic = "force-dynamic";
 
 async function getData() {
@@ -9,30 +12,67 @@ async function getData() {
   return data.values
 }
 
-export default async function ProduitDetail({ params }) {
-  const rows = await getData()
-  if (!rows || rows.length <= 1) {
-    return <p>Produit introuvable.</p>
+export default function ProduitDetail({ params }) {
+  const [produit, setProduit] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  // Champs client
+  const [client, setClient] = useState("")
+  const [telephone, setTelephone] = useState("")
+  const [zone, setZone] = useState("")
+  const [reception, setReception] = useState("Boutique")
+  const [paiement, setPaiement] = useState("Non payé")
+  const [quantite, setQuantite] = useState(1)
+  const [message, setMessage] = useState("")
+
+  useEffect(() => {
+    async function fetchProduit() {
+      const rows = await getData()
+      if (!rows || rows.length <= 1) return
+      const vins = rows.slice(1)
+      const found = vins.find(v => v[0] === params.id)
+      setProduit(found || null)
+      setLoading(false)
+    }
+    fetchProduit()
+  }, [params.id])
+
+  async function confirmOrder() {
+    if (!produit) return
+    try {
+      const res = await fetch("/api/commande", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          idCommande: `CMD-${Date.now()}`,
+          produit: produit[1],
+          mode: "bouteille", // ou "carton" selon choix
+          quantite,
+          total: Number(produit[4]) * quantite, // prix bouteille par défaut
+          reduction: produit[9] ? "Promotion appliquée" : "Aucune",
+          client,
+          telephone,
+          zone,
+          reception,
+          paiement
+        })
+      })
+      const data = await res.json()
+      setMessage(data.message)
+    } catch {
+      setMessage("Erreur lors de l’enregistrement de la commande.")
+    }
   }
 
-  const vins = rows.slice(1)
-  const produit = vins.find(v => v[0] === params.id)
-
-  if (!produit) {
-    return <p>Produit introuvable.</p>
-  }
+  if (loading) return <p>Chargement...</p>
+  if (!produit) return <p>Produit introuvable.</p>
 
   return (
     <main style={{ padding: 40, background: "#f5f5f5" }}>
       <div style={{ maxWidth: 800, margin: "0 auto", background: "white", padding: 30, borderRadius: 12, boxShadow: "0 4px 8px rgba(0,0,0,0.1)" }}>
         
-        {/* Image si présente en colonne 13 */}
         {produit[12] && (
-          <img 
-            src={produit[12]} 
-            alt={produit[1]} 
-            style={{ width: "100%", height: "300px", objectFit: "cover", borderRadius: 8, marginBottom: 20 }} 
-          />
+          <img src={produit[12]} alt={produit[1]} style={{ width: "100%", height: "300px", objectFit: "cover", borderRadius: 8, marginBottom: 20 }} />
         )}
 
         <h1 style={{ marginBottom: 10, color: "#6b1b1b" }}>{produit[1]}</h1>
@@ -46,19 +86,18 @@ export default async function ProduitDetail({ params }) {
 
         <p style={{ fontStyle: "italic", marginTop: 15 }}>{produit[8]}</p>
 
-        <button style={{ 
-          marginTop: 20, 
-          padding: "12px 20px", 
-          background: "#6b1b1b", 
-          color: "white", 
-          border: "none", 
-          borderRadius: 6, 
-          cursor: "pointer", 
-          fontSize: "16px" 
-        }}>
-          Commander
-        </button>
-      </div>
-    </main>
-  )
-}
+        {/* Formulaire client */}
+        <h3 style={{ marginTop: 20 }}>Commander 📝</h3>
+        <input placeholder="Nom client" value={client} onChange={e => setClient(e.target.value)} style={{ display:"block", margin:"5px 0", padding:8 }} />
+        <input placeholder="Téléphone" value={telephone} onChange={e => setTelephone(e.target.value)} style={{ display:"block", margin:"5px 0", padding:8 }} />
+        <input placeholder="Zone" value={zone} onChange={e => setZone(e.target.value)} style={{ display:"block", margin:"5px 0", padding:8 }} />
+        <select value={reception} onChange={e => setReception(e.target.value)} style={{ display:"block", margin:"5px 0", padding:8 }}>
+          <option>Boutique</option>
+          <option>Livraison</option>
+        </select>
+        <select value={paiement} onChange={e => setPaiement(e.target.value)} style={{ display:"block", margin:"5px 0", padding:8 }}>
+          <option>Non payé</option>
+          <option>Mobile Money</option>
+          <option>Espèces</option>
+        </select>
+        <input type="number" min="1" value={quantite} onChange={e => setQuantite(Number(e.target.value
