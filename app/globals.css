@@ -1,3 +1,15 @@
+/* Import Tailwind CSS v4 - cette ligne active toutes les classes Tailwind */
+@import "tailwindcss";
+
+/* Couleurs personnalisées du Gabon, disponibles comme bg-gabon-vert, text-gabon-jaune, etc. */
+@theme {
+  --color-gabon-vert: #009E60;
+  --color-gabon-jaune: #FCD116;
+  --color-gabon-bleu: #3A75C4;
+  --color-whatsapp: #25D366;
+}
+
+/* Styles de base conservés pour les autres pages de l'appli */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
