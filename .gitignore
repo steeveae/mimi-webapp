@@ -1,0 +1,17 @@
+# Dépendances Node.js (installées avec npm install)
+node_modules/
+
+# Fichiers générés par Next.js lors du build
+.next/
+out/
+
+# Variables d'environnement (contiennent des secrets)
+.env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+
+# Système d'exploitation
+.DS_Store
